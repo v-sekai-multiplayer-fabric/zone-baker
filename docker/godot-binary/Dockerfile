@@ -17,6 +17,7 @@ RUN dnf install -y 'dnf-command(config-manager)' && \
         libX11-devel libXcursor-devel libXinerama-devel libXrandr-devel \
         libXi-devel mesa-libGL-devel \
         alsa-lib-devel pulseaudio-libs-devel \
+        libstdc++-static \
         ca-certificates && \
     dnf clean all && \
     pip3 install scons
