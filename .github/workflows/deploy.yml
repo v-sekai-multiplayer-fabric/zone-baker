@@ -1,23 +1,31 @@
 name: Build and push baker image
 
 on:
-  push:
-    branches: [main]
+  # Only trigger manually — the baker image depends on the Godot editor binary
+  # (ghcr.io/v-sekai-fire/godot-editor-double) which is built separately by
+  # build-godot-binary.yml and takes ~1 hour. Auto-deploying on push will fail
+  # until that image exists.
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Build Godot binary and push to GHCR"]
+    types: [completed]
+    branches: [main]
 
 jobs:
   deploy:
+    # Only run when triggered manually, or when the binary build succeeded
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: read   # pull pre-built Godot binary from GHCR
+      packages: read
 
     steps:
       - uses: actions/checkout@v4
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - name: Log in to GHCR (to pull pre-built Godot)
+      - name: Log in to GHCR (to pull pre-built Godot editor binary)
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -34,7 +42,4 @@ jobs:
       - name: Build and deploy baker image
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        # Build locally (not --remote-only) so the GitHub Actions runner can
-        # pull ghcr.io/v-sekai-fire/godot-editor-double (private image) using
-        # the GITHUB_TOKEN logged in above. Fly's remote builder has no GHCR auth.
         run: flyctl deploy --app multiplayer-fabric-baker --local-only
