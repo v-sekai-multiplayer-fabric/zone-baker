@@ -26,14 +26,14 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Log in to GHCR (to pull pre-built Godot editor binary)
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Log in to Fly registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: registry.fly.io
           username: x
