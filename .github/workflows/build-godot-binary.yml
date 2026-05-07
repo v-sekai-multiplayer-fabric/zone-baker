@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: V-Sekai-fire/multiplayer-fabric-build
-          ref: b27142e94c755c771e97d38bd4cdcb3bc97ba2dc
+          ref: main
           path: godot-src
           fetch-depth: 1
 
