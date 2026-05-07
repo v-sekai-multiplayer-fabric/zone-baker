@@ -27,9 +27,9 @@ jobs:
       - name: Checkout world-godot source
         uses: actions/checkout@v6
         with:
-          repository: V-Sekai-fire/multiplayer-fabric-build
-          ref: main
-          path: godot-src
+          repository: V-Sekai-fire/multiplayer-fabric-godot
+          ref: multiplayer-fabric-base
+          path: godot-src/godot
           fetch-depth: 1
 
       - name: Set up Docker Buildx
